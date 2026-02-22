@@ -1,0 +1,29 @@
+
+# CITATION.cff — Citation File Format v2.0
+# ETAMv2.0 Formal Specification (Chinese-language metadata)
+# See https://citation-file-format.github.io/
+
+cff-version: 2.0
+message: "如您在研究中使用本规范，请按下方元数据引用。"
+title: "ETAMv2.0：能量–时间–环境活性模型——形式化规范（v2.0.0）"
+authors:
+  - family-names: "邵"
+    given-names: "昆"
+    email: "1947910734@qq.com"
+    orcid: "https://orcid.org/0009-0006-0673-5448"
+    
+abstract: "ETAMv2.0 是一种基于本体论的第一性原理建模框架。其核心由三个不可约基底构成：A（空间构型活性）、T（时间槽激活）、E（能质响应场）；XR 为其统一离散编码（R ∈ ℤ^{N×3}）；icR 为其复值生成器（f(R) = x(R) + i·c(R)），其中实部 x(R) 表征协变可观测量，虚部 c(R) 驱动多尺度自洽涌现（分子 → 介观簇 → 凝聚相统计场）。本规范受 Rosen 关系本体论、Connes 非交换几何、Penrose 复平面层级与 Wigner 数学可逆性思想共同奠基。"
+version: "2.0.0"
+date-released: "2026-02-22"
+license: "CC-BY-4.0"
+repository-code: "https://github.com/zx1158/etam-spec"
+repository-artifact: "https://github.com/zx1158/etam-spec/releases/tag/v2.0.0"
+doi: "10.5281/zenodo.xxxxxxx"
+url: "https://github.com/zx1158/etam-spec"
+keywords:
+  - "本体建模"
+  - "复值生成器"
+  - "多尺度涌现"
+  - "ATE 基底"
+  - "XR 编码"
+  - "icR 框架"

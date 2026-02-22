@@ -1,0 +1,238 @@
+% SPDX-License-Identifier: CC-BY-4.0
+% Repository: https://github.com/zx1158/etam-model
+% Version: v2.0 (2026-02-22)
+% Language: English (中文注释已移除以确保编译)
+% For GitHub rendering: see README.md
+
+\documentclass[11pt]{article}
+\usepackage[a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}      % 支持UTF-8编码
+\usepackage[T1]{fontenc}         % 支持欧洲字符
+\usepackage{times}               % Times字体
+\usepackage{amsmath, amssymb, mathtools}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{siunitx}
+\usepackage{titlesec}
+\usepackage{natbib}
+\usepackage{graphicx}            % 添加图形支持
+\usepackage{booktabs}            % 更好的表格
+\usepackage{microtype}           % 微调排版
+
+% 设置超链接
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
+    pdftitle={ETAMv2.0: Energetic--Temporal--Environmental Activity Model},
+    pdfauthor={ETAM Specification Consortium}
+}
+
+\sisetup{locale=US}
+
+% Math operators
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\IE}{IE}
+\DeclareMathOperator{\solv}{solv}
+\DeclareMathOperator{\logE}{log}
+
+% Symbols
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\RePart}{\Re}
+\newcommand{\ImPart}{\Im}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\avg}[1]{\langle #1 \rangle}
+
+% Bilingual terminology macros (英文版本)
+\newcommand{\ATE}{\textbf{A--T--E} (Spatial-Temporal-Energetic)}
+\newcommand{\XR}{\textbf{XR} (ATE Basis Encoding)}
+\newcommand{\icR}{\textbf{icR} (Complex Generator: $f(R)=x(R)+i\,c(R)$)}
+
+% 标题格式
+\title{ETAMv2.0: Energetic--Temporal--Environmental Activity Model, Version 2.0}
+\subtitle{Formal Specification Document (v2.0) — Not a derivation notebook nor implementation guide}
+\author{ETAM Specification Consortium}
+\date{2026-02-22}
+
+\begin{document}
+
+\maketitle
+
+\section{Notation and Conventions}
+\label{sec:notation}
+All symbols are defined as follows unless otherwise noted:
+\begin{itemize}[leftmargin=*, nosep]
+    \item \ATE: primitive ontological basis — \textbf{A} for \emph{spatial-architectural activity}, \textbf{T} for \emph{temporal-slot activation}, \textbf{E} for \emph{energo-material response}
+    \item \XR: discrete coordinate representation of the \ATE basis; $R = [\mathbf{n}_1,\dots,\mathbf{n}_N]^\top \in \Z^{N \times 3}$
+    \item \icR: complex-valued generator $f(R) = x(R) + i\,c(R)$, where $x$ is the \emph{covariant observable}, $c$ the \emph{contravariant lifting potential}
+\end{itemize}
+
+\section{Introduction}
+\label{sec:introduction}
+The \textbf{Energetic--Temporal--Environmental Activity Model (ETAM)} is a physics-informed, differentiable framework for predicting macroscopic scalar outputs $Y$ from discrete-continuous hybrid inputs. Version 2.0 introduces unified slot-based encoding, complex-valued response functions, and adaptive multilevel hierarchy driven by the imaginary component.
+
+\textbf{Clarification of novelty}: The \ATE\ triad is not a re-labeling of conventional physical quantities. It is a \emph{primitive ontological basis} defined by its role in the \icR\ generator: \textbf{A} encodes spatial-architectural constraints, \textbf{T} encodes temporal-slot resolution, \textbf{E} encodes energo-material coupling. No existing model uses this triad as a unified coordinate system.
+
+This aligns with Rosen's relational ontology: \ATE\ does not describe \emph{what things are}, but \emph{how they co-constitute observables through constrained coordination} \cite{rosen1978}.
+
+\section{Core Output Structure}
+\label{sec:core-output}
+The model defines a dual-domain mapping:
+\begin{align}
+    Y &= A \cdot T \cdot E \label{eq:output-physical-observable} \\
+    f(R) &= x(R) + \mathrm{i}\, c(R) \label{eq:response-complex-generator}
+\end{align}
+where $Y \in \R_{\geq 0}$ is the physical observable (e.g., binding energy in \si{\electronvolt}), and $f(R) \in \C$ is the \icR\ generator. Alignment requires $\RePart[f(R)] \approx Y$, while $\ImPart[f(R)] = c(R) \geq 0$ governs scale-level selection.
+
+\section{Input Representation $R$}
+\label{sec:input-representation}
+Each active unit $j$ (atom or functional group) is encoded as a discrete triple:
+\begin{equation}
+    \mathbf{n}_j = (n_{A,j},\, n_{T,j},\, n_{E,j}) \in \Z_{\geq 0}^3.
+    \label{eq:unit-encoding}
+\end{equation}
+For $N$ units, the input tensor is:
+\begin{equation}
+    R = [\mathbf{n}_1,\, \mathbf{n}_2,\, \dots,\, \mathbf{n}_N]^\top \in \Z^{N \times 3}.
+    \label{eq:input-tensor}
+\end{equation}
+$R$ is not a feature vector — it is the \emph{coordinate representation of the \ATE\ basis in discrete state space}. Each row $\mathbf{n}_j$ is a point in the \ATE\ lattice, where $n_{A,j}$, $n_{T,j}$, $n_{E,j}$ are \emph{mutually constraining coordinates}, not independent scalars.
+
+\section{Component Definitions}
+\label{sec:components}
+
+\subsection{A-value: Spatial-Architectural Activity}
+\label{subsec:a-value}
+Let $\omega(p) \in \{0,1,2\}$ denote occupancy (empty/single electron/lone pair) at orbital slot $p$. Define slot weights $k(p)$:
+\begin{equation}
+    k(p) =
+    \begin{cases}
+        1 & \text{for } s\text{-orbitals}, \\
+        2 & \text{for } p\text{-orbitals}, \\
+        3 & \text{for } d\text{-orbitals}, \\
+        4 & \text{for } f\text{-orbitals}.
+    \end{cases}
+    \label{eq:orbital-weights}
+\end{equation}
+The activity constant for unit $j$ is:
+\begin{equation}
+    C_{A,j} = \sum_{p \in \{s,p,d,f\}} \omega(p)\, k(p).
+    \label{eq:ca-j}
+\end{equation}
+Then:
+\begin{equation}
+    A_j = \alpha_A \cdot C_{A,j}, \quad
+    A = \frac{1}{N}\sum_{j=1}^N A_j,
+    \label{eq:a-j-and-mean}
+\end{equation}
+with scaling factor $\alpha_A > 0$.
+
+\subsection{T-value: Temporal-Slot Activation}
+\label{subsec:t-value}
+Six discrete time slots $k=0,\dots,5$ cover $\SI{1e-15}{\second}$ to $\SI{1e6}{\second}$. Let $\nu(k) \in \{0,1,2\}$ indicate activation level. Then:
+\begin{equation}
+    C_{T,j} = \sum_{k=0}^{5} \nu(k)\, w(k), \quad
+    T_j = \alpha_T \cdot C_{T,j}, \quad
+    T = \frac{1}{N}\sum_{j=1}^N T_j.
+    \label{eq:t-j-and-mean}
+\end{equation}
+
+\subsection{E-value: Energo-Material Response Field}
+\label{subsec:e-value}
+Four environmental response slots: ionization ($e_I$), affinity ($e_A$), polarization ($e_P$), solvation ($e_S$). Let $\mu(e) \in \{0,1,2\}$. Define:
+\begin{equation}
+    C_{E,j} = \sum_{e \in \{I,A,P,S\}} \mu(e)\, w_e.
+    \label{eq:ce-j}
+\end{equation}
+Environment-modulated field:
+\begin{align}
+    \Phi_I(\Xi) &= \frac{F^2}{\IE}, 
+    \label{eq:phi-ionization} \\
+    \Phi_P(\Xi) &= \frac{\epsilon - 1}{\epsilon + 2} F^2, 
+    \label{eq:phi-polarization} \\
+    \Phi_S(\Xi) &= \frac{\Delta G_{\solv}}{RT},
+    \label{eq:phi-solvation}
+\end{align}
+and:
+\begin{equation}
+    E_j = \alpha_E \cdot C_{E,j} \cdot \Bigg[1 + \sum_{e} \underbrace{\frac{\mu(e)\, w_e}{C_{E,j}}}_{\beta_e(C_{E,j})} \cdot \Phi_e(\Xi) \Bigg], \quad
+    E = \frac{1}{N}\sum_{j=1}^N E_j.
+    \label{eq:e-j-and-mean}
+\end{equation}
+
+\section{Response Function $f(R)$}
+\label{sec:response-function}
+
+The \icR\ framework ($f(R) = x(R) + i\,c(R)$) is not an engineering choice for numerical stability. It is a \emph{structural necessity}: only complex-valued representation permits simultaneous encoding of covariant observables ($x$) and contravariant scale selectors ($c$) within a single differentiable map.
+
+The icR mapping realizes a \emph{Connes-type spectral geometry} \cite{connes1994}: discrete \ATE\ coordinates $R$ define a finite spectral triple, whose complex extension $f(R)$ yields a differentiable continuum limit.
+
+\subsection{Real Part (Covariant Observable)}
+\label{subsec:real-part}
+\begin{equation}
+    x(R) = \alpha_x \cdot \avg{C_A} \cdot \avg{C_T} \cdot \avg{C_E},
+    \label{eq:x-r-product-form}
+\end{equation}
+or alternatively via MLP:
+\begin{equation}
+    x(R) = \mathrm{MLP}_{\theta_x}\big( \logE(C_A+\eps),\, \logE(C_T+\eps),\, \logE(C_E+\eps) \big).
+    \label{eq:x-r-mlp-form}
+\end{equation}
+
+\subsection{Imaginary Part (Contravariant Lifting Potential)}
+\label{subsec:imag-part}
+\begin{equation}
+    c(R) = \lambda \cdot \Bigg[ \frac{\Var(C_A)}{\avg{C_A}^2} + \frac{\Var(C_T)}{\avg{C_T}^2} \Bigg] \cdot \big(1 + \eta \cdot S_{\mathrm{env}} \big),
+    \label{eq:c-r-lifting}
+\end{equation}
+where $S_{\mathrm{env}} = \sum_e \Phi_e(\Xi)$. The non-negative imaginary part $c(R)$ implements Penrose's 'ladder of infinity' on the complex plane \cite{penrose2004}: each threshold $\tau_k$ marks a rung where the system's effective description ascends to a new ontological level.
+\begin{itemize}[leftmargin=*, nosep]
+    \item $c(R) < \tau_1$: Level 1 (molecular determinism)
+    \item $\tau_1 \leq c(R) < \tau_2$: Level 2 (mesoscale clusters)
+    \item $c(R) \geq \tau_2$: Level 3 (condensed-phase statistical fields)
+\end{itemize}
+
+\section{Training Objective}
+\label{sec:training-objective}
+\begin{equation}
+    \mathcal{L} = \norm{ \RePart[f(R)] - Y }^2 + \gamma \cdot \mathcal{L}_{\mathrm{reg}}\big(c(R)\big),
+    \label{eq:training-loss}
+\end{equation}
+where $\mathcal{L}_{\mathrm{reg}}$ enforces level consistency (e.g., entropy penalty on $c(R)$) or other domain-informed constraints.
+
+\section{Constrained Inverse Queries}
+\label{sec:inverse-queries}
+The model supports \emph{constrained inverse queries}: given a partial configuration $\tilde{R}$ and target scalar $y_{\mathrm{target}}$, the set of completions $R_{\mathrm{miss}}$ satisfying both energy fidelity and level consistency is non-empty and computable under standard differentiable optimization.
+
+This inverse capability is not an add-on feature. It is a \emph{logical consequence} of the \ATE--\icR\ duality: if $f$ is bijective over its domain (up to level constraints), then generation is the algebraic inverse of prediction \cite{wigner1960}.
+
+\section{Version Identification}
+\label{sec:version}
+\textbf{ETAMv2.0} is formally defined by this specification (v2.0, 2026-02-22). Key normative innovations:
+\begin{enumerate}[leftmargin=*, nosep]
+    \item Unified discrete slot encoding across \textbf{A}, \textbf{T}, and \textbf{E} as a primitive ontological basis;
+    \item Complex-valued separation of covariant observable ($x$) and contravariant lifting potential ($c$);
+    \item Imaginary part-driven adaptive multilevel hierarchy grounded in Penrose's ladder;
+    \item Verifiable scientific discovery via Wigner-style bidirectional invertibility.
+\end{enumerate}
+
+% 如果没有bib文件，可以注释掉以下两行
+\bibliographystyle{unsrtnat}
+\bibliography{etam-philosophy}
+
+% 如果没有bib文件，使用以下替代：
+%\begin{thebibliography}{9}
+%\bibitem{rosen1978} Rosen, R. (1978). Fundamentals of Measurement and Representation of Natural Systems.
+%\bibitem{connes1994} Connes, A. (1994). Noncommutative Geometry.
+%\bibitem{penrose2004} Penrose, R. (2004). The Road to Reality: A Complete Guide to the Laws of the Universe.
+%\bibitem{wigner1960} Wigner, E. P. (1960). The Unreasonable Effectiveness of Mathematics in the Natural Sciences.
+%\end{thebibliography}
+
+\end{document}
