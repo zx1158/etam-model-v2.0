@@ -1,14 +1,14 @@
 % SPDX-License-Identifier: CC-BY-4.0
 % Repository: https://github.com/zx1158/etam-model
 % Version: v2.0 (2026-02-22)
-% Language: English (中文注释已移除以确保编译)
-% For GitHub rendering: see README.md
+% Language: English
+% Author: Shao Kun <11947910734@qq.com>
 
 \documentclass[11pt]{article}
 \usepackage[a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
-\usepackage[utf8]{inputenc}      % 支持UTF-8编码
-\usepackage[T1]{fontenc}         % 支持欧洲字符
-\usepackage{times}               % Times字体
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
 \usepackage{amsmath, amssymb, mathtools}
 \usepackage{bm}
 \usepackage{enumitem}
@@ -17,18 +17,22 @@
 \usepackage{siunitx}
 \usepackage{titlesec}
 \usepackage{natbib}
-\usepackage{graphicx}            % 添加图形支持
-\usepackage{booktabs}            % 更好的表格
-\usepackage{microtype}           % 微调排版
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
 
-% 设置超链接
+% PDF metadata
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
     citecolor=blue,
     urlcolor=blue,
     pdftitle={ETAMv2.0: Energetic--Temporal--Environmental Activity Model},
-    pdfauthor={ETAM Specification Consortium}
+    pdfauthor={Shao Kun <11947910734@qq.com>},
+    pdfsubject={Formal specification of ETAM version 2.0},
+    pdfkeywords={ETAM, v2.0, ATE basis, complex response function, calcium modeling},
+    pdfcreator={LaTeX with hyperref},
+    pdfproducer={pdfTeX},
 }
 
 \sisetup{locale=US}
@@ -50,15 +54,15 @@
 \newcommand{\norm}[1]{\left\|#1\right\|}
 \newcommand{\avg}[1]{\langle #1 \rangle}
 
-% Bilingual terminology macros (英文版本)
+% Terminology macros
 \newcommand{\ATE}{\textbf{A--T--E} (Spatial-Temporal-Energetic)}
 \newcommand{\XR}{\textbf{XR} (ATE Basis Encoding)}
 \newcommand{\icR}{\textbf{icR} (Complex Generator: $f(R)=x(R)+i\,c(R)$)}
 
-% 标题格式
+% Title
 \title{ETAMv2.0: Energetic--Temporal--Environmental Activity Model, Version 2.0}
-\subtitle{Formal Specification Document (v2.0) — Not a derivation notebook nor implementation guide}
-\author{ETAM Specification Consortium}
+\subtitle{Formal Specification Document (v2.0)}
+\author{Shao Kun \texttt{<11947910734@qq.com>}}
 \date{2026-02-22}
 
 \begin{document}
@@ -70,7 +74,7 @@
 All symbols are defined as follows unless otherwise noted:
 \begin{itemize}[leftmargin=*, nosep]
     \item \ATE: primitive ontological basis — \textbf{A} for \emph{spatial-architectural activity}, \textbf{T} for \emph{temporal-slot activation}, \textbf{E} for \emph{energo-material response}
-    \item \XR: discrete coordinate representation of the \ATE basis; $R = [\mathbf{n}_1,\dots,\mathbf{n}_N]^\top \in \Z^{N \times 3}$
+    \item \XR: discrete coordinate representation of the \ATE\ basis; $R = [\mathbf{n}_1,\dots,\mathbf{n}_N]^\top \in \Z^{N \times 3}$
     \item \icR: complex-valued generator $f(R) = x(R) + i\,c(R)$, where $x$ is the \emph{covariant observable}, $c$ the \emph{contravariant lifting potential}
 \end{itemize}
 
@@ -223,16 +227,8 @@ This inverse capability is not an add-on feature. It is a \emph{logical conseque
     \item Verifiable scientific discovery via Wigner-style bidirectional invertibility.
 \end{enumerate}
 
-% 如果没有bib文件，可以注释掉以下两行
 \bibliographystyle{unsrtnat}
 \bibliography{etam-philosophy}
 
-% 如果没有bib文件，使用以下替代：
-%\begin{thebibliography}{9}
-%\bibitem{rosen1978} Rosen, R. (1978). Fundamentals of Measurement and Representation of Natural Systems.
-%\bibitem{connes1994} Connes, A. (1994). Noncommutative Geometry.
-%\bibitem{penrose2004} Penrose, R. (2004). The Road to Reality: A Complete Guide to the Laws of the Universe.
-%\bibitem{wigner1960} Wigner, E. P. (1960). The Unreasonable Effectiveness of Mathematics in the Natural Sciences.
-%\end{thebibliography}
-
 \end{document}
+
