@@ -1,31 +1,64 @@
-# ETAMv2.0 规范 — ATE 基底 · XR 编码 · icR 生成器  
-> [English README](README.md)｜[PDF 下载](https://github.com/zx1158/etam-spec/releases/download/v2.0.0/ETAMv2.0_spec.pdf)
+# ETAM v2.01 — 能量潮汐解析模型  
+*一种面向复杂生命系统的、可检验的物理假设生成平台*
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.xxxxxxx.svg)](https://doi.org/10.5281/zenodo.xxxxxxx)  
+
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![GitHub Release](https://img.shields.io/github/v/release/zx1158/etam-model-v2.0?label=Release&color=blue)](https://github.com/zx1158/etam-model-v2.0)  
+[![许可证：MIT](https://img.shields.io/badge/许可证-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## 📘 什么是 ETAMv2.0？
+## 📄 技术模型文档（v2.01）  
+📄 **[下载 PDF（ETAM v2.01 模型文档）](https://github.com/zx1158/etam-model-v2.0/blob/main/paper/ETAMv2.01_model.pdf)**  
+✅ 最新技术规范｜完整数学模型｜支持打印与离线阅读  
 
-**ETAMv2.0**（Energetic–Temporal–Environmental Activity Model v2.0）不是对旧模型的升级，而是一个**建模范式的根本性重构**。它以三个不可约的本体基底（Ontological Basis）为第一性原理：
-
-| 符号 | 全称（中文） | 含义 |
-|------|----------------|------|
-| **A** | **空间构型活性**（Spatial-Architectural Activity） | 描述轨道占据几何、原子排布约束（如 s/p/d/f 轨道权重） |
-| **T** | **时间槽激活**（Temporal-Slot Activation） | 划分离散演化尺度窗口（从飞秒到百万秒） |
-| **E** | **能质响应场**（Energo-Material Response Field） | 表征环境耦合效应（电离、亲和、极化、溶剂化） |
-
-- ✅ **XR**：`R = [n_A, n_T, n_E] ∈ ℤ^{N×3}` —— ATE 基底在离散状态空间中的**协同投影坐标**（非特征拼接）。  
-- ✅ **icR**：`f(R) = x(R) + i·c(R)` —— **复值生成器**：<br>　• `x(R)` 是协变可观测量（实部，对应物理输出 `Y`）<br>　• `c(R)` 是共变提升势（虚部，驱动 `分子 → 介观 → 宏观` 自洽涌现）。
-
-> 🔑 **核心创新**：ETAMv2.0 将建模语言从“变量映射”升维至“本体坐标系”，其数学结构直接受 Rosen 关系本体论、Connes 非交换几何、Penrose 复平面层级、Wigner 数学可逆性四大思想奠基。
+🔗 **模型仓库主页**：[https://github.com/zx1158/etam-model-v2.0](https://github.com/zx1158/etam-model-v2.0)  
+→ 含完整源代码、技术文档与实现细节。
 
 ---
 
-## 🛠️ 如何使用本规范？
+## 🧮 核心方程  
+模型的根本等式（双域对齐条件）：
 
-### ✅ 获取 PDF
-- [下载 ETAMv2.0_spec.pdf（v2.0.0）](https://github.com/zx1158/etam-spec/releases/download/v2.0.0/ETAMv2.0_spec.pdf)  
+$$
+f(R(\Lambda)) = Y(\Lambda) = A(\Lambda) \cdot T(\Lambda,\tau) \cdot E(\Lambda,\tau)
+$$
+
+其中：  
+- $A$：动态环境响应张量（原子 + 成键 + 环境项）  
+- $T$：Heaviside 门控的时间调制张量  
+- $E$：受 $A$ 与 $T$ 动态调制的能级响应场  
+- $f$：基于 Volterra/Laplace 升维的仿射-响应函数  
+
+---
+
+## ✨ 核心特性  
+✅ **物理可解释**：每个符号对应明确量子化学可观测量（$Z_{\text{eff}}$, $L_i$, $\varepsilon_{\text{solvent}}$）  
+✅ **数学可追溯**：所有公式编号与论文一致，支持符号级验证  
+✅ **操作即开即用**：`time_flag=OFF` 切换静态模式，`ON` 启用动态感知  
+✅ **闭环工作流就绪**：支持「虚拟预测 → 实验验证 → 假设生成」全链条  
+
+---
+
+## 📚 引用本工作  
+本成果采用 **GitHub Release 作为永久学术标识符**，符合以下规范：  
+- 🌐 Nature Scientific Data 政策（软件发布等效 DOI）  
+- 🇨🇳 国家标准 GB/T 7714—2015（电子公告 EB/OL 类型）  
+- 📚 IEEE 引用指南（要求 cite specific release URL）  
+
+**推荐引用格式（中文文献）**：  
+> 邵昆. ETAM v2.01：能量潮汐解析模型[EB/OL]. GitHub, 2026-02-22[2026-02-22]. https://github.com/zx1158/etam-model-v2.0/blob/main/paper/ETAMv2.01_model.pdf.
+
+**BibTeX（复制到 `.bib` 文件）**：
+```bibtex
+@software{etam_v2_01,
+  author       = {邵昆},
+  title        = {ETAM v2.01: 能量潮汐解析模型},
+  year         = {2026},
+  publisher    = {GitHub},
+  version      = {v2.01},
+  doi          = {https://github.com/zx1158/etam-model-v2.0/blob/main/paper/ETAMv2.01_model.pdf},
+  url          = {https://github.com/zx1158/etam-model-v2.0/blob/main/paper/ETAMv2.01_model.pdf}
+}
 
 
